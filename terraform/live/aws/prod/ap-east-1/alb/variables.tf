@@ -16,10 +16,10 @@ variable "www_domain_name" {
   default     = "www.lumio-learning.com"
 }
 
-variable "hosted_zone_name" {
-  description = "Existing public Route 53 hosted zone name."
+variable "hosted_zone_id" {
+  description = "Existing public Route 53 hosted zone ID."
   type        = string
-  default     = "lumio-learning.com"
+  default     = "Z00306403SSX2SQBFGSED"
 }
 
 variable "vpc_id" {

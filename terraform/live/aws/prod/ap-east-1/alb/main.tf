@@ -1,12 +1,3 @@
-locals {
-  hosted_zone_lookup_name = "${var.hosted_zone_name}."
-}
-
-data "aws_route53_zone" "this" {
-  name         = local.hosted_zone_lookup_name
-  private_zone = false
-}
-
 resource "aws_security_group" "alb" {
   name        = "lumio-learning-prod-alb"
   description = "Security group for the Lumio Learning production ALB"
@@ -96,7 +87,7 @@ resource "aws_route53_record" "certificate_validation" {
     }
   }
 
-  zone_id = data.aws_route53_zone.this.zone_id
+  zone_id = var.hosted_zone_id
   name    = each.value.name
   type    = each.value.type
   ttl     = 60
@@ -145,7 +136,7 @@ resource "aws_lb_listener" "https" {
 }
 
 resource "aws_route53_record" "apex" {
-  zone_id = data.aws_route53_zone.this.zone_id
+  zone_id = var.hosted_zone_id
   name    = var.domain_name
   type    = "A"
 
@@ -157,7 +148,7 @@ resource "aws_route53_record" "apex" {
 }
 
 resource "aws_route53_record" "www" {
-  zone_id = data.aws_route53_zone.this.zone_id
+  zone_id = var.hosted_zone_id
   name    = var.www_domain_name
   type    = "A"
 

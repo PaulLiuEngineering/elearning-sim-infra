@@ -20,7 +20,7 @@ output "acm_certificate_arn" {
 
 output "hosted_zone_id" {
   description = "ID of the existing public Route 53 hosted zone."
-  value       = data.aws_route53_zone.this.zone_id
+  value       = var.hosted_zone_id
 }
 
 output "target_group_arn" {

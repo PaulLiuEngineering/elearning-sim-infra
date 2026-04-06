@@ -1,6 +1,6 @@
 domain_name                  = "lumio-learning.com"
 www_domain_name              = "www.lumio-learning.com"
-hosted_zone_name             = "lumio-learning.com"
+hosted_zone_id               = "Z00306403SSX2SQBFGSED"
 vpc_id                       = "vpc-0aff03d7739209bef"
 subnet_ids                   = ["subnet-0983719c503d903ac", "subnet-0a2df0c9eaa4e4572"]
 placeholder_target_group_port = 80
