@@ -1,3 +1,53 @@
+moved {
+  from = aws_acm_certificate.this
+  to   = module.acm.aws_acm_certificate.this
+}
+
+moved {
+  from = aws_route53_record.certificate_validation
+  to   = module.acm.aws_route53_record.certificate_validation
+}
+
+moved {
+  from = aws_acm_certificate_validation.this
+  to   = module.acm.aws_acm_certificate_validation.this[0]
+}
+
+moved {
+  from = aws_security_group.alb
+  to   = module.alb.aws_security_group.alb
+}
+
+moved {
+  from = aws_lb.this
+  to   = module.alb.aws_lb.this
+}
+
+moved {
+  from = aws_lb_target_group.placeholder
+  to   = module.alb.aws_lb_target_group.placeholder
+}
+
+moved {
+  from = aws_lb_listener.http
+  to   = module.alb.aws_lb_listener.http
+}
+
+moved {
+  from = aws_lb_listener.https
+  to   = module.alb.aws_lb_listener.https
+}
+
+moved {
+  from = aws_route53_record.apex
+  to   = module.route53.aws_route53_record.apex
+}
+
+moved {
+  from = aws_route53_record.www
+  to   = module.route53.aws_route53_record.www
+}
+
 module "acm" {
   source = "../../../../../modules/acm"
 
