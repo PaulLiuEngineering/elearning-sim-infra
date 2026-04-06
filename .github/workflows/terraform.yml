@@ -13,6 +13,12 @@ on:
     paths:
       - ".github/workflows/terraform.yml"
       - "terraform/**"
+  workflow_dispatch:
+    inputs:
+      stack_dir:
+        description: "Optional Terraform stack directory under terraform/live to plan/apply manually."
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -44,19 +50,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            BASE_SHA="${{ github.event.pull_request.base.sha }}"
-            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
-          else
-            BASE_SHA="${{ github.event.before }}"
-            HEAD_SHA="${{ github.sha }}"
-          fi
-
-          if [[ "$BASE_SHA" == "0000000000000000000000000000000000000000" ]]; then
-            BASE_SHA="$(git rev-list --max-parents=0 HEAD --reverse | awk 'NR==1 { print; exit }')"
-          fi
-
-          mapfile -t changed_files < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- terraform .github/workflows/terraform.yml)
+          MANUAL_STACK_DIR="${{ github.event.inputs.stack_dir || '' }}"
           declare -A stacks=()
 
           is_stack_root() {
@@ -92,6 +86,29 @@ jobs:
             done < <(git grep -l "modules/${module_name}" -- terraform/live || true)
           }
 
+          if [[ -n "$MANUAL_STACK_DIR" ]]; then
+            if ! is_stack_root "$MANUAL_STACK_DIR"; then
+              echo "Manual stack_dir '$MANUAL_STACK_DIR' is not a valid Terraform stack root." >&2
+              exit 1
+            fi
+
+            stacks["$MANUAL_STACK_DIR"]=1
+          else
+
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            BASE_SHA="${{ github.event.before }}"
+            HEAD_SHA="${{ github.sha }}"
+          fi
+
+          if [[ "$BASE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+            BASE_SHA="$(git rev-list --max-parents=0 HEAD --reverse | awk 'NR==1 { print; exit }')"
+          fi
+
+          mapfile -t changed_files < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- terraform .github/workflows/terraform.yml)
+
           for file in "${changed_files[@]}"; do
             [[ -z "$file" ]] && continue
 
@@ -102,6 +119,7 @@ jobs:
               add_module_consumers "$module_dir"
             fi
           done
+          fi
 
           if [[ "${#stacks[@]}" -eq 0 ]]; then
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
@@ -157,7 +175,7 @@ jobs:
         run: terraform fmt -check -recursive
 
   validate-and-plan:
-    if: github.event_name == 'pull_request' && needs.detect-stacks.outputs.has_changes == 'true'
+    if: (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch') && needs.detect-stacks.outputs.has_changes == 'true'
     needs:
       - detect-stacks
       - fmt
@@ -194,7 +212,7 @@ jobs:
         run: terraform plan -input=false -no-color
 
   apply:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.detect-stacks.outputs.has_changes == 'true'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && needs.detect-stacks.outputs.has_changes == 'true'
     needs:
       - detect-stacks
     runs-on: ubuntu-latest
