@@ -37,7 +37,7 @@ variable "cn_www_domain_name" {
 variable "attach_cn_certificate" {
   description = "Attach the separately validated .cn certificate to the existing HTTPS listener."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "vpc_id" {
