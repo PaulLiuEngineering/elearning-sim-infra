@@ -9,10 +9,6 @@ now.
 - `modules/`: reusable Terraform modules
 - `live/`: provider and environment specific root modules
 
-Current live stack:
-
-- `live/aws/prod/us-east-1/ecr`
-
 ## Stack Metadata
 
 Each runnable stack under `live/` should include a `stack-metadata.json` file
