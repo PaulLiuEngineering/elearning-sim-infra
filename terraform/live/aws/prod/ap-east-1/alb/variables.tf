@@ -22,6 +22,24 @@ variable "hosted_zone_id" {
   default     = "Z00306403SSX2SQBFGSED"
 }
 
+variable "cn_domain_name" {
+  description = "Primary .cn domain name for a separate ACM certificate."
+  type        = string
+  default     = "lumio-learning.cn"
+}
+
+variable "cn_www_domain_name" {
+  description = "WWW .cn domain name for a separate ACM certificate."
+  type        = string
+  default     = "www.lumio-learning.cn"
+}
+
+variable "attach_cn_certificate" {
+  description = "Attach the separately validated .cn certificate to the existing HTTPS listener."
+  type        = bool
+  default     = false
+}
+
 variable "vpc_id" {
   description = "VPC ID for the ALB and target group."
   type        = string
