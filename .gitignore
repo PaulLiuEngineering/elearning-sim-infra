@@ -1,5 +1,5 @@
 .terraform/
-.terraform.lock.hcl
+# .terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 crash.log
@@ -14,4 +14,4 @@ terraform.tfvars
 **/.terragrunt-cache/
 .terragrunt-cache/*
 **/.terragrunt-cache/*
-./tools/*
+.tools/*
