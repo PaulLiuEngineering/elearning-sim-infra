@@ -285,14 +285,14 @@ jobs:
           aws-region: ${{ matrix.group.region }}
           role-to-assume: ${{ matrix.group.role_arn }}
       
-      - name: Debug state before apply
-        working-directory: ${{ matrix.group.group_dir }}
+      - name: Debug s3 state before apply
+        working-directory: terraform/live/aws/prod/ap-east-1/s3
         shell: bash
         run: |
           set -x
           pwd
-          terragrunt run --all --non-interactive state list || true
+          terragrunt state show 'module.s3.aws_s3_bucket.this' || true
 
-      - name: Terragrunt apply
-        working-directory: ${{ matrix.group.group_dir }}
-        run: terragrunt run --all --non-interactive apply -- -auto-approve -no-color
+      # - name: Terragrunt apply
+      #   working-directory: ${{ matrix.group.group_dir }}
+      #   run: terragrunt run --all --non-interactive apply -- -auto-approve -no-color
