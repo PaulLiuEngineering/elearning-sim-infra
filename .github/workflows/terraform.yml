@@ -291,7 +291,7 @@ jobs:
         run: |
           set -x
           pwd
-          terragrunt state show 'module.s3.aws_s3_bucket.this' || true
+          terragrunt state list || true
 
       # - name: Terragrunt apply
       #   working-directory: ${{ matrix.group.group_dir }}
