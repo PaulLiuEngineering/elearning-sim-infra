@@ -293,7 +293,15 @@ jobs:
           pwd
           aws sts get-caller-identity
           terragrunt init
-          rg -n 'bucket|key|region' .terragrunt-cache/**/backend.tf
+          python3 - <<'PY'
+          import pathlib
+          for path in pathlib.Path(".terragrunt-cache").rglob("backend.tf"):
+              print(f"=== {path} ===")
+              text = path.read_text()
+              for line in text.splitlines():
+                  if any(key in line for key in ["bucket", "key", "region"]):
+                      print(line)
+          PY
           terragrunt state list || true
 
       # - name: Terragrunt apply
