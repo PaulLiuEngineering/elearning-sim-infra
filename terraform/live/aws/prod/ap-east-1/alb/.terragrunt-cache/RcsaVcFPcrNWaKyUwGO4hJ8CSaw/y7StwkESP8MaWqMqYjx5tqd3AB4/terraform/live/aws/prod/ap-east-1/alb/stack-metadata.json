@@ -1,6 +1,0 @@
-{
-  "provider": "aws",
-  "region": "ap-east-1",
-  "github_environment": "prod",
-  "role_arn": "arn:aws:iam::772781266436:role/elearning-sim-terraform-oidc-github"
-}

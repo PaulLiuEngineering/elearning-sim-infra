@@ -1,7 +1,0 @@
-bucket_name = "elearning-sim-hk-prod"
-attach_https_only_bucket_policy = false
-
-tags = {
-  application = "elearning-sim"
-  owner       = "platform"
-}
