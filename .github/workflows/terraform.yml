@@ -187,7 +187,7 @@ jobs:
         run: terraform fmt -check -recursive
 
   validate-and-plan:
-    if: (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch') && needs.detect-stacks.outputs.has_changes == 'true'
+    if: ((github.event_name == 'pull_request') && needs.detect-stacks.outputs.has_changes == 'true') || github.event_name == 'workflow_dispatch'
     needs:
       - detect-stacks
       - fmt
@@ -250,7 +250,7 @@ jobs:
         run: terragrunt run --all --non-interactive plan
 
   apply:
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && needs.detect-stacks.outputs.has_changes == 'true'
+    if: ((github.event_name == 'push' && github.ref == 'refs/heads/main') && needs.detect-stacks.outputs.has_changes == 'true') || github.event_name == 'workflow_dispatch'
     needs:
       - detect-stacks
     runs-on: ubuntu-latest
