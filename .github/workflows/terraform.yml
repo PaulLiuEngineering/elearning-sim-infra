@@ -168,7 +168,7 @@ jobs:
           printf 'groups=%s\n' "$GROUPS_JSON" >> "$GITHUB_OUTPUT"
 
   fmt:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
 
     steps:
