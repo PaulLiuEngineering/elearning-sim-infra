@@ -304,6 +304,6 @@ jobs:
           PY
           terragrunt state list || true
 
-      # - name: Terragrunt apply
-      #   working-directory: ${{ matrix.group.group_dir }}
-      #   run: terragrunt run --all --non-interactive apply -- -auto-approve -no-color
+      - name: Terragrunt apply
+        working-directory: ${{ matrix.group.group_dir }}
+        run: terragrunt run --all --non-interactive apply -- -auto-approve -no-color
