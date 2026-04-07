@@ -1,0 +1,13 @@
+name_prefix    = "lumio-learning-hk-prod"
+vpc_id         = "vpc-0aff03d7739209bef"
+subnet_ids     = ["subnet-08161c6c1dfa9a0c6"]
+create_service = false
+task_definition_arn = null
+container_name = "app"
+container_port = 3000
+desired_count  = 1
+
+tags = {
+  application = "lumio-learning"
+  owner       = "platform"
+}

@@ -1,0 +1,6 @@
+{
+  "provider": "aws",
+  "region": "us-east-1",
+  "github_environment": "prod",
+  "role_arn": "arn:aws:iam::123456789012:role/example-terraform-oidc-github"
+}

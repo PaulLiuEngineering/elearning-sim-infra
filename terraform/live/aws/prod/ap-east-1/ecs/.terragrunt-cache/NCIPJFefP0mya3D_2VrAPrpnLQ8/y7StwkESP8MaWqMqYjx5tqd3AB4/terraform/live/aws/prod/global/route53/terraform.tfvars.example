@@ -1,0 +1,11 @@
+domain_name = "lumio-learning.com"
+create_www_alias_record = false
+www_alias_name          = null
+www_alias_zone_id       = null
+create_apex_redirect_records = false
+apex_redirect_target    = "www.lumio-learning.com"
+
+tags = {
+  application = "lumio-learning"
+  owner       = "platform"
+}

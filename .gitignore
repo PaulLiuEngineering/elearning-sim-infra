@@ -10,3 +10,7 @@ override.tf.json
 *_override.tf.json
 terraform.tfvars
 *.auto.tfvars
+.terragrunt-cache/
+**/.terragrunt-cache/
+.terragrunt-cache/*
+**/.terragrunt-cache/*
