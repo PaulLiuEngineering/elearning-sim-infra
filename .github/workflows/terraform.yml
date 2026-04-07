@@ -19,6 +19,11 @@ on:
         description: "Optional Terragrunt stack directory under terraform/live."
         required: false
         type: string
+      run_apply:
+        description: "Run apply during manual execution."
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -163,7 +168,7 @@ jobs:
           printf 'groups=%s\n' "$GROUPS_JSON" >> "$GITHUB_OUTPUT"
 
   fmt:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
 
     steps:
@@ -250,7 +255,7 @@ jobs:
         run: terragrunt run --all --non-interactive plan
 
   apply:
-    if: ((github.event_name == 'push' && github.ref == 'refs/heads/main') && needs.detect-stacks.outputs.has_changes == 'true') || github.event_name == 'workflow_dispatch'
+    if: ((github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_apply == 'true')) && needs.detect-stacks.outputs.has_changes == 'true'
     needs:
       - detect-stacks
     runs-on: ubuntu-latest
@@ -279,6 +284,25 @@ jobs:
         with:
           aws-region: ${{ matrix.group.region }}
           role-to-assume: ${{ matrix.group.role_arn }}
+      
+      - name: Debug s3 state before apply
+        working-directory: terraform/live/aws/prod/ap-east-1/s3
+        shell: bash
+        run: |
+          set -x
+          pwd
+          aws sts get-caller-identity
+          terragrunt init
+          python3 - <<'PY'
+          import pathlib
+          for path in pathlib.Path(".terragrunt-cache").rglob("backend.tf"):
+              print(f"=== {path} ===")
+              text = path.read_text()
+              for line in text.splitlines():
+                  if any(key in line for key in ["bucket", "key", "region"]):
+                      print(line)
+          PY
+          terragrunt state list || true
 
       - name: Terragrunt apply
         working-directory: ${{ matrix.group.group_dir }}
