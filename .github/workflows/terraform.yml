@@ -291,6 +291,9 @@ jobs:
         run: |
           set -x
           pwd
+          aws sts get-caller-identity
+          terragrunt init
+          rg -n 'bucket|key|region' .terragrunt-cache/**/backend.tf
           terragrunt state list || true
 
       # - name: Terragrunt apply
