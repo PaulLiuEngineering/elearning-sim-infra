@@ -35,7 +35,7 @@ variable "db_name" {
 variable "username" {
   description = "Master username for the PostgreSQL instance."
   type        = string
-  default     = "elearning-sim-db-admin"
+  default     = "elearning_sim_db_admin"
 }
 
 variable "engine_version" {
