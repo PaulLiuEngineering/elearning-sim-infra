@@ -22,3 +22,8 @@ output "target_group_arn" {
   description = "ARN of the placeholder target group for future ECS attachment."
   value       = aws_lb_target_group.placeholder.arn
 }
+
+output "alb_security_group_id" {
+  description = "Security group ID attached to the production ALB."
+  value       = aws_security_group.alb.id
+}

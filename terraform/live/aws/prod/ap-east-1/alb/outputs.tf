@@ -37,3 +37,8 @@ output "target_group_arn" {
   description = "ARN of the placeholder target group for future ECS attachment."
   value       = module.alb.target_group_arn
 }
+
+output "alb_security_group_id" {
+  description = "Security group ID attached to the production ALB."
+  value       = module.alb.alb_security_group_id
+}
