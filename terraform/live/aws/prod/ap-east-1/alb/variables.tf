@@ -49,7 +49,7 @@ variable "vpc_id" {
 variable "subnet_ids" {
   description = "Subnet IDs for the internet-facing ALB."
   type        = list(string)
-  default     = ["subnet-0983719c503d903ac", "subnet-0a2df0c9eaa4e4572"]
+  default     = ["subnet-0983719c503d903ac", "subnet-0a2df0c9eaa4e4572", "subnet-08161c6c1dfa9a0c6"]
 
   validation {
     condition     = length(var.subnet_ids) >= 2
