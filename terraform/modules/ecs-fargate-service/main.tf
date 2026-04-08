@@ -111,6 +111,24 @@ resource "aws_iam_role_policy_attachment" "execution_ecs_task" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+data "aws_iam_policy_document" "execution_ssm_get_parameters" {
+  statement {
+    sid = "AllowGetParameters"
+
+    actions = [
+      "ssm:GetParameters"
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "execution_ssm_get_parameters" {
+  name   = "${var.name_prefix}-execution-ssm-get-parameters"
+  role   = aws_iam_role.execution.id
+  policy = data.aws_iam_policy_document.execution_ssm_get_parameters.json
+}
+
 resource "aws_ecs_service" "this" {
   count                             = var.create_service ? 1 : 0
   name                              = "${var.name_prefix}-service"
