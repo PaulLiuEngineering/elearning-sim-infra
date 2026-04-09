@@ -6,29 +6,20 @@ terraform {
   source = "${get_repo_root()}//terraform/live/aws/qa/global/route53"
 }
 
-dependency "dns_zone" {
-  config_path = "../route53-zone"
+dependency "alb" {
+  config_path = "../../ap-east-1/alb"
 
   mock_outputs = {
+    alb_dns_name   = "qa-internal-lumio-learning-alb-000000.ap-east-1.elb.amazonaws.com"
+    alb_zone_id    = "Z0000000000000"
     hosted_zone_id = "Z0000000000000000"
   }
   mock_outputs_merge_strategy_with_state  = "shallow"
   mock_outputs_allowed_terraform_commands = ["validate", "plan"]
 }
 
-dependency "alb" {
-  config_path = "../../ap-east-1/alb"
-
-  mock_outputs = {
-    alb_dns_name = "qa-internal-lumio-learning-alb-000000.ap-east-1.elb.amazonaws.com"
-    alb_zone_id  = "Z0000000000000"
-  }
-  mock_outputs_merge_strategy_with_state  = "shallow"
-  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
-}
-
 inputs = {
-  hosted_zone_id = dependency.dns_zone.outputs.hosted_zone_id
+  hosted_zone_id = dependency.alb.outputs.hosted_zone_id
   alias_name     = dependency.alb.outputs.alb_dns_name
   alias_zone_id  = dependency.alb.outputs.alb_zone_id
 }
