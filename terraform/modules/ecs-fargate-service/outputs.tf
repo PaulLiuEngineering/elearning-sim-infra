@@ -43,6 +43,21 @@ output "service_arn" {
   value       = try(aws_ecs_service.this[0].id, null)
 }
 
+output "service_name" {
+  description = "Name of the ECS service, or null when service creation is disabled."
+  value       = try(aws_ecs_service.this[0].name, null)
+}
+
+output "task_definition_arn" {
+  description = "ARN of the ECS task definition."
+  value       = aws_ecs_task_definition.this.arn
+}
+
+output "task_definition_family" {
+  description = "Family name of the ECS task definition."
+  value       = aws_ecs_task_definition.this.family
+}
+
 output "security_group_id" {
   description = "Security group ID attached to the ECS service."
   value       = aws_security_group.ecs_service.id

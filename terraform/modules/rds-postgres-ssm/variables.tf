@@ -1,21 +1,21 @@
+variable "aws_region" {
+  description = "AWS region for the root module provider."
+  type        = string
+}
+
 variable "name_prefix" {
-  description = "Resource name prefix."
+  description = "Resource name prefix for the RDS resources."
   type        = string
 }
 
 variable "vpc_id" {
-  description = "VPC ID for the database security group."
+  description = "VPC ID for the RDS instance."
   type        = string
 }
 
 variable "subnet_ids" {
   description = "Subnet IDs for the DB subnet group."
   type        = list(string)
-
-  validation {
-    condition     = length(var.subnet_ids) >= 2
-    error_message = "At least two subnet IDs are required for the DB subnet group."
-  }
 }
 
 variable "allowed_security_group_id" {
@@ -29,7 +29,7 @@ variable "db_name" {
 }
 
 variable "username" {
-  description = "Master username for the database."
+  description = "Master username for the PostgreSQL instance."
   type        = string
 }
 
@@ -46,13 +46,13 @@ variable "instance_class" {
 }
 
 variable "allocated_storage" {
-  description = "Initial allocated storage in GiB."
+  description = "Initial storage allocation in GiB."
   type        = number
   default     = 20
 }
 
 variable "max_allocated_storage" {
-  description = "Maximum autoscaled storage in GiB."
+  description = "Maximum storage autoscaling allocation in GiB."
   type        = number
   default     = 100
 }
@@ -73,6 +73,24 @@ variable "deletion_protection" {
   description = "Enable deletion protection for the database."
   type        = bool
   default     = true
+}
+
+variable "db_address_ssm_parameter_name" {
+  description = "SSM parameter name that stores the database address."
+  type        = string
+  default     = null
+}
+
+variable "db_username_ssm_parameter_name" {
+  description = "SSM parameter name that stores the database username."
+  type        = string
+  default     = null
+}
+
+variable "db_password_ssm_parameter_name" {
+  description = "SSM parameter name that stores the database password."
+  type        = string
+  default     = null
 }
 
 variable "tags" {

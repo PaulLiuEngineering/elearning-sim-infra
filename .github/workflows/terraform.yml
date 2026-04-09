@@ -141,6 +141,12 @@ jobs:
 
           groups = {}
 
+          def get_group_dir(stack_dir):
+              parts = stack_dir.split(os.sep)
+              if len(parts) >= 5 and parts[0] == "terraform" and parts[1] == "live":
+                  return os.path.join(*parts[:4])
+              return os.path.dirname(stack_dir)
+
           for line in sys.stdin:
               stack_dir = line.strip()
               if not stack_dir:
@@ -150,18 +156,37 @@ jobs:
               with open(metadata_path, "r", encoding="utf-8") as metadata_file:
                   metadata = json.load(metadata_file)
 
-              group_dir = os.path.dirname(stack_dir)
+              group_dir = get_group_dir(stack_dir)
 
               if group_dir not in groups:
                   groups[group_dir] = {
                       "group_dir": group_dir,
                       "provider": metadata["provider"],
-                      "region": metadata["region"],
+                      "credential_region": metadata["region"],
                       "github_environment": metadata["github_environment"],
                       "role_arn": metadata["role_arn"],
+                      "_regions": [metadata["region"]],
                   }
+                  continue
 
-          print(json.dumps(list(groups.values()), separators=(",", ":")))
+              group = groups[group_dir]
+
+              for key in ("provider", "github_environment", "role_arn"):
+                  if group[key] != metadata[key]:
+                      raise SystemExit(
+                          f"Incompatible metadata for grouped stacks under {group_dir}: "
+                          f"{key} differs between stacks."
+                      )
+
+              if metadata["region"] not in group["_regions"]:
+                  group["_regions"].append(metadata["region"])
+
+          for group in groups.values():
+              if group["provider"] == "aws" and len(group["_regions"]) > 1:
+                  group["credential_region"] = "us-east-1"
+              del group["_regions"]
+
+          print(json.dumps(sorted(groups.values(), key=lambda group: group["group_dir"]), separators=(",", ":")))
           ')"
 
           echo "has_changes=true" >> "$GITHUB_OUTPUT"
@@ -219,7 +244,7 @@ jobs:
         if: matrix.group.provider == 'aws'
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-region: ${{ matrix.group.region }}
+          aws-region: ${{ matrix.group.credential_region }}
           role-to-assume: ${{ matrix.group.role_arn }}
       
       - name: Debug Terragrunt environment
@@ -232,11 +257,7 @@ jobs:
           terragrunt --version
           terraform version
           ls -la
-          ls -la ../../../../modules
-          for d in alb s3 ecs rds network; do
-            echo "=== $d/terragrunt.hcl ==="
-            sed -n '1,40p' "$d/terragrunt.hcl" || true
-          done
+          find . -maxdepth 3 -name terragrunt.hcl | sort
 
       - name: Terragrunt validate
         working-directory: ${{ matrix.group.group_dir }}
@@ -282,27 +303,8 @@ jobs:
         if: matrix.group.provider == 'aws'
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-region: ${{ matrix.group.region }}
+          aws-region: ${{ matrix.group.credential_region }}
           role-to-assume: ${{ matrix.group.role_arn }}
-      
-      - name: Debug s3 state before apply
-        working-directory: terraform/live/aws/prod/ap-east-1/s3
-        shell: bash
-        run: |
-          set -x
-          pwd
-          aws sts get-caller-identity
-          terragrunt init
-          python3 - <<'PY'
-          import pathlib
-          for path in pathlib.Path(".terragrunt-cache").rglob("backend.tf"):
-              print(f"=== {path} ===")
-              text = path.read_text()
-              for line in text.splitlines():
-                  if any(key in line for key in ["bucket", "key", "region"]):
-                      print(line)
-          PY
-          terragrunt state list || true
 
       - name: Terragrunt apply
         working-directory: ${{ matrix.group.group_dir }}

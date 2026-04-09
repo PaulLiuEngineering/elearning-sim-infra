@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}//terraform/live/aws/qa/ap-east-1/alb"
+  source = "${get_repo_root()}//terraform/modules/alb-internal-acm"
 }
 
 dependency "dns_zone" {
@@ -28,7 +28,18 @@ dependency "vpc" {
 }
 
 inputs = {
-  hosted_zone_id = dependency.dns_zone.outputs.hosted_zone_id
-  vpc_id         = dependency.vpc.outputs.vpc_id
-  subnet_ids     = dependency.vpc.outputs.public_subnet_ids
+  aws_region          = "ap-east-1"
+  name_prefix         = "lumio-learning-qa-hk"
+  domain_name         = "qa-internal.lumio-learning.com"
+  hosted_zone_id      = dependency.dns_zone.outputs.hosted_zone_id
+  vpc_id              = dependency.vpc.outputs.vpc_id
+  subnet_ids          = dependency.vpc.outputs.public_subnet_ids
+  allowed_cidr_blocks = ["71.251.203.226/32"]
+  tags = {
+    cloud       = "aws"
+    environment = "qa"
+    managed_by  = "terraform"
+    region      = "ap-east-1"
+    stack       = "alb"
+  }
 }
