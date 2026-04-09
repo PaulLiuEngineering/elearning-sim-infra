@@ -1,8 +1,8 @@
 # Terraform Layout
 
 This repository is structured to support multiple cloud providers and multiple
-environments over time, while keeping only `aws/prod/us-east-1/ecr` live for
-now.
+environments over time, with live AWS infrastructure currently spanning
+`prod` and `qa` stacks.
 
 ## Layout
 
@@ -27,5 +27,5 @@ Current metadata fields:
 Planned expansion:
 
 - additional AWS regional stacks such as `eks`, `db`, and `s3`
-- additional AWS regions such as `ap-east-1`
+- additional AWS regions beyond `us-east-1` and `ap-east-1`
 - additional cloud providers such as Aliyun

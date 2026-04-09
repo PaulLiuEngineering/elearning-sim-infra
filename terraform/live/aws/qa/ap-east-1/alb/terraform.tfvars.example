@@ -1,0 +1,11 @@
+name_prefix           = "lumio-learning-qa-hk"
+domain_name           = "qa-internal.lumio-learning.com"
+internal              = true
+allowed_cidr_blocks   = ["71.251.203.226/32"]
+placeholder_target_group_port = 80
+fixed_response_message_body    = "Lumio Learning QA is coming soon."
+
+tags = {
+  application = "lumio-learning"
+  owner       = "platform"
+}
