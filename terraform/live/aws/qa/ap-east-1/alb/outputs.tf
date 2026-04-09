@@ -22,3 +22,8 @@ output "alb_security_group_id" {
   description = "Security group ID attached to the QA ALB."
   value       = module.alb.alb_security_group_id
 }
+
+output "hosted_zone_id" {
+  description = "Route 53 hosted zone ID used by the QA ALB."
+  value       = var.hosted_zone_id
+}
