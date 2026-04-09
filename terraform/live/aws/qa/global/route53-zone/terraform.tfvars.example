@@ -1,0 +1,6 @@
+domain_name = "qa-internal.lumio-learning.com"
+
+tags = {
+  application = "lumio-learning"
+  owner       = "platform"
+}
