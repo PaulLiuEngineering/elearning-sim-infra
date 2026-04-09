@@ -7,7 +7,7 @@ terraform {
 }
 
 dependency "dns_zone" {
-  config_path = "../../../global/route53-zone"
+  config_path = "../../global/route53-zone"
 
   mock_outputs = {
     hosted_zone_id = "Z0000000000000000"
