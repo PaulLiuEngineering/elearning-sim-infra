@@ -31,6 +31,13 @@ variable "subnet_ids" {
 variable "allowed_cidr_blocks" {
   description = "CIDR blocks allowed to reach the ALB listeners."
   type        = list(string)
+  default     = []
+}
+
+variable "allowed_cidr_block_ssm_parameter_names" {
+  description = "Optional SSM parameter names whose values are used as the ALB allowlist."
+  type        = list(string)
+  default     = []
 }
 
 variable "tags" {
