@@ -18,6 +18,6 @@ dependency "alb" {
 }
 
 inputs = {
-  alias_name      = dependency.alb.outputs.alb_dns_name
-  alias_zone_id   = dependency.alb.outputs.alb_zone_id
+  alias_name    = dependency.alb.outputs.alb_dns_name
+  alias_zone_id = dependency.alb.outputs.alb_zone_id
 }

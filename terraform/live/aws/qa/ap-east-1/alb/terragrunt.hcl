@@ -10,7 +10,7 @@ dependency "vpc" {
   config_path = "../vpc"
 
   mock_outputs = {
-    vpc_id            = "vpc-00000000000000000"
+    vpc_id             = "vpc-00000000000000000"
     private_subnet_ids = ["subnet-00000000000000001", "subnet-00000000000000002"]
   }
   mock_outputs_merge_strategy_with_state  = "shallow"
@@ -18,6 +18,6 @@ dependency "vpc" {
 }
 
 inputs = {
-  vpc_id      = dependency.vpc.outputs.vpc_id
-  subnet_ids  = dependency.vpc.outputs.private_subnet_ids
+  vpc_id     = dependency.vpc.outputs.vpc_id
+  subnet_ids = dependency.vpc.outputs.private_subnet_ids
 }
