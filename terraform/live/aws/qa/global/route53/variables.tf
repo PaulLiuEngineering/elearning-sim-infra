@@ -26,6 +26,11 @@ variable "alias_zone_id" {
   type        = string
 }
 
+variable "hosted_zone_id" {
+  description = "Route 53 hosted zone ID that contains the QA records."
+  type        = string
+}
+
 variable "tags" {
   description = "Common tags for this stack."
   type        = map(string)

@@ -21,6 +21,11 @@ variable "vpc_id" {
   type        = string
 }
 
+variable "hosted_zone_id" {
+  description = "Route 53 hosted zone ID used for ACM validation and DNS records."
+  type        = string
+}
+
 variable "subnet_ids" {
   description = "Subnet IDs for the internal ALB."
   type        = list(string)

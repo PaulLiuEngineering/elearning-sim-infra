@@ -1,14 +1,9 @@
-data "aws_route53_zone" "public" {
-  name         = "lumio-learning.com"
-  private_zone = false
-}
-
 module "acm" {
   source = "../../../../../modules/acm"
 
   domain_name               = var.domain_name
   subject_alternative_names = []
-  hosted_zone_id            = data.aws_route53_zone.public.zone_id
+  hosted_zone_id            = var.hosted_zone_id
 }
 
 module "alb" {
