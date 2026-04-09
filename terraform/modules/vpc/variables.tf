@@ -1,3 +1,8 @@
+variable "aws_region" {
+  description = "AWS region for the root module provider."
+  type        = string
+}
+
 variable "name_prefix" {
   description = "Resource name prefix for the VPC and related resources."
   type        = string

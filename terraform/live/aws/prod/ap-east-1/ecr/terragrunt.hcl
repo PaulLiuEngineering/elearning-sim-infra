@@ -3,5 +3,19 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}//terraform/live/aws/prod/ap-east-1/ecr"
+  source = "${get_repo_root()}//terraform/modules/ecr-repository"
+}
+
+inputs = {
+  aws_region           = "ap-east-1"
+  repository_name      = "elearning-sim-hk-ecr"
+  image_tag_mutability = "MUTABLE"
+  scan_on_push         = true
+  tags = {
+    cloud       = "aws"
+    environment = "prod"
+    managed_by  = "terraform"
+    region      = "ap-east-1"
+    stack       = "ecr"
+  }
 }

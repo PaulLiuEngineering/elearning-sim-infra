@@ -1,6 +1,6 @@
 resource "aws_security_group" "alb" {
-  name        = "lumio-learning-prod-alb"
-  description = "Security group for the Lumio Learning production ALB"
+  name        = var.alb_name
+  description = var.security_group_description != null ? var.security_group_description : "Security group for the ${var.alb_name} ALB"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -28,28 +28,32 @@ resource "aws_security_group" "alb" {
   }
 
   tags = merge(var.tags, {
-    Name = "lumio-learning-prod-alb"
+    Name = var.alb_name
   })
 }
 
 resource "aws_lb" "this" {
-  name               = "lumio-learning-prod-alb"
+  name               = var.alb_name
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
   subnets            = var.subnet_ids
 
   tags = merge(var.tags, {
-    Name = "lumio-learning-prod-alb"
+    Name = var.alb_name
   })
 }
 
 resource "aws_lb_target_group" "placeholder" {
-  name        = "lumio-learning-prod-tg"
+  name        = var.target_group_name
   port        = var.placeholder_target_group_port
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = var.vpc_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   health_check {
     enabled             = true
@@ -64,7 +68,7 @@ resource "aws_lb_target_group" "placeholder" {
   }
 
   tags = merge(var.tags, {
-    Name = "lumio-learning-prod-placeholder-tg"
+    Name = var.target_group_tag_name
   })
 }
 

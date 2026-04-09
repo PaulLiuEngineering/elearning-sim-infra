@@ -6,8 +6,9 @@ environments over time, with live AWS infrastructure currently spanning
 
 ## Layout
 
+- `bootstrap/`: manual backend and CI/OIDC prerequisites
 - `modules/`: reusable Terraform modules
-- `live/`: provider and environment specific root modules
+- `live/`: provider and environment specific Terragrunt stacks only
 
 ## Stack Metadata
 

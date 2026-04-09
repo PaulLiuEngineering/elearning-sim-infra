@@ -3,6 +3,30 @@ variable "vpc_id" {
   type        = string
 }
 
+variable "alb_name" {
+  description = "Name of the ALB and its security group."
+  type        = string
+  default     = "lumio-learning-prod-alb"
+}
+
+variable "target_group_name" {
+  description = "Name of the placeholder target group."
+  type        = string
+  default     = "lumio-learning-prod-tg"
+}
+
+variable "target_group_tag_name" {
+  description = "Name tag applied to the placeholder target group."
+  type        = string
+  default     = "lumio-learning-prod-placeholder-tg"
+}
+
+variable "security_group_description" {
+  description = "Description applied to the ALB security group."
+  type        = string
+  default     = null
+}
+
 variable "subnet_ids" {
   description = "Subnet IDs for the internet-facing ALB."
   type        = list(string)

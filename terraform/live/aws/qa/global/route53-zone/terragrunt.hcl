@@ -3,5 +3,17 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}//terraform/live/aws/qa/global/route53-zone"
+  source = "${get_repo_root()}//terraform/modules/route53-zone"
+}
+
+inputs = {
+  aws_region  = "us-east-1"
+  domain_name = "qa-internal.lumio-learning.com"
+  tags = {
+    cloud       = "aws"
+    environment = "qa"
+    managed_by  = "terraform"
+    region      = "global"
+    stack       = "route53-zone"
+  }
 }

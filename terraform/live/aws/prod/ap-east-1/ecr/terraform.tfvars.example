@@ -1,8 +1,0 @@
-repository_name      = "elearning-sim-hk-ecr"
-image_tag_mutability = "IMMUTABLE"
-scan_on_push         = true
-
-tags = {
-  application = "elearning-sim"
-  owner       = "platform"
-}
