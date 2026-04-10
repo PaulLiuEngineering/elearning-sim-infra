@@ -18,11 +18,11 @@ dependency "vpc" {
 }
 
 inputs = {
-  aws_region                             = "ap-east-1"
-  name_prefix                            = "lumio-learning-qa-hk"
-  vpc_id                                 = dependency.vpc.outputs.vpc_id
-  subnet_id                              = dependency.vpc.outputs.public_subnet_ids[0]
-  key_name                               = "rds-bastion-host-qa"
+  aws_region  = "ap-east-1"
+  name_prefix = "lumio-learning-qa-hk"
+  vpc_id      = dependency.vpc.outputs.vpc_id
+  subnet_id   = dependency.vpc.outputs.public_subnet_ids[0]
+  key_name    = "rds-bastion-host-qa"
   allowed_cidr_block_ssm_parameter_names = [
     "/lumio-learning/hk/qa/alb-allowlist/paulliu",
   ]
