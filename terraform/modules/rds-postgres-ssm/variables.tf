@@ -23,6 +23,12 @@ variable "allowed_security_group_id" {
   type        = string
 }
 
+variable "allowed_security_group_ids" {
+  description = "Additional security group IDs allowed to access PostgreSQL."
+  type        = list(string)
+  default     = []
+}
+
 variable "db_name" {
   description = "Initial database name."
   type        = string
