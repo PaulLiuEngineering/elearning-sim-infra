@@ -36,6 +36,7 @@ inputs = {
   subnet_ids     = dependency.vpc.outputs.public_subnet_ids
   allowed_cidr_block_ssm_parameter_names = [
     "/lumio-learning/hk/qa/alb-allowlist/paulliu",
+    "/lumio-learning/hk/qa/alb-allowlist/tigercai",
   ]
   tags = {
     cloud       = "aws"

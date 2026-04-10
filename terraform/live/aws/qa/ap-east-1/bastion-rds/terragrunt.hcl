@@ -25,6 +25,7 @@ inputs = {
   key_name    = "rds-bastion-host-qa"
   allowed_cidr_block_ssm_parameter_names = [
     "/lumio-learning/hk/qa/alb-allowlist/paulliu",
+    "/lumio-learning/hk/qa/alb-allowlist/tigercai",
   ]
   tags = {
     cloud       = "aws"
