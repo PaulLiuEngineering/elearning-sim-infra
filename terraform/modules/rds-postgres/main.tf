@@ -23,18 +23,30 @@ resource "aws_security_group" "db" {
 }
 
 locals {
-  effective_allowed_security_group_ids = sort(distinct(compact(concat([var.allowed_security_group_id], var.allowed_security_group_ids))))
+  additional_allowed_security_group_ids = sort(distinct(compact([
+    for security_group_id in var.allowed_security_group_ids : security_group_id
+    if security_group_id != var.allowed_security_group_id
+  ])))
 }
 
-resource "aws_vpc_security_group_ingress_rule" "from_allowed_security_groups" {
-  for_each = toset(local.effective_allowed_security_group_ids)
+resource "aws_vpc_security_group_ingress_rule" "from_ecs" {
+  security_group_id            = aws_security_group.db.id
+  referenced_security_group_id = var.allowed_security_group_id
+  ip_protocol                  = "tcp"
+  from_port                    = 5432
+  to_port                      = 5432
+  description                  = "Allow PostgreSQL from ECS tasks"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "from_additional_security_groups" {
+  for_each = toset(local.additional_allowed_security_group_ids)
 
   security_group_id            = aws_security_group.db.id
   referenced_security_group_id = each.value
   ip_protocol                  = "tcp"
   from_port                    = 5432
   to_port                      = 5432
-  description                  = "Allow PostgreSQL from approved security groups"
+  description                  = "Allow PostgreSQL from additional approved security groups"
 }
 
 resource "aws_db_subnet_group" "this" {
