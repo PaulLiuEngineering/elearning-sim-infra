@@ -91,14 +91,34 @@ jobs:
 
           add_module_consumers() {
             local module_dir="$1"
-            local module_name
+            local current_module_dir
+            local current_module_name
+            local parent_module_dir
+            declare -A visited_modules=()
+            local -a module_queue=("$module_dir")
 
-            module_name="$(basename "$module_dir")"
+            while [[ "${#module_queue[@]}" -gt 0 ]]; do
+              current_module_dir="${module_queue[0]}"
+              module_queue=("${module_queue[@]:1}")
 
-            while IFS= read -r file; do
-              [[ -z "$file" ]] && continue
-              add_stack_root_from_path "$file"
-            done < <(git grep -l "modules/${module_name}" -- terraform/live || true)
+              [[ -n "${visited_modules[$current_module_dir]:-}" ]] && continue
+              visited_modules["$current_module_dir"]=1
+              current_module_name="$(basename "$current_module_dir")"
+
+              while IFS= read -r file; do
+                [[ -z "$file" ]] && continue
+
+                if [[ "$file" == terraform/live/* ]]; then
+                  add_stack_root_from_path "$file"
+                elif [[ "$file" == terraform/modules/* ]]; then
+                  parent_module_dir="$(printf '%s' "$file" | cut -d/ -f1-3)"
+
+                  if [[ -z "${visited_modules[$parent_module_dir]:-}" ]]; then
+                    module_queue+=("$parent_module_dir")
+                  fi
+                fi
+              done < <(git grep -l -e "modules/${current_module_name}" -e "../${current_module_name}" -- terraform/live terraform/modules || true)
+            done
           }
 
           if [[ -n "$MANUAL_STACK_DIR" ]]; then
