@@ -46,6 +46,14 @@ resource "aws_security_group" "bastion" {
     }
   }
 
+  ingress {
+    description = "Allow SSH from approved CIDRs"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = nonsensitive(local.effective_ssh_allowlist_cidrs)
+  }
+
   egress {
     description = "Allow all outbound traffic"
     from_port   = 0
@@ -57,17 +65,6 @@ resource "aws_security_group" "bastion" {
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-bastion"
   })
-}
-
-resource "aws_vpc_security_group_ingress_rule" "ssh" {
-  for_each = toset(local.effective_ssh_allowlist_cidrs)
-
-  security_group_id = aws_security_group.bastion.id
-  cidr_ipv4         = each.value
-  ip_protocol       = "tcp"
-  from_port         = 22
-  to_port           = 22
-  description       = "Allow SSH from approved CIDRs"
 }
 
 resource "aws_instance" "this" {
