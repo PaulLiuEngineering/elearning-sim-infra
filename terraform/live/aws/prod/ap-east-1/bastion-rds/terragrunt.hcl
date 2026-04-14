@@ -23,6 +23,7 @@ inputs = {
   vpc_id      = dependency.vpc.outputs.vpc_id
   subnet_id   = dependency.vpc.outputs.public_subnet_ids[0]
   key_name    = "rds-bastion-host-prod"
+  ami_id      = "ami-08944d7bb6589fc80"
   allowed_cidr_block_ssm_parameter_names = [
     "/lumio-learning/hk/prod/alb-allowlist/paulliu",
   ]
