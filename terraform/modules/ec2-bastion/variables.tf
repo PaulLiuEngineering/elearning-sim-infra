@@ -28,6 +28,12 @@ variable "key_name" {
   }
 }
 
+variable "ami_id" {
+  description = "Optional AMI ID for the bastion host. When null, the latest Amazon Linux 2023 AMI is used."
+  type        = string
+  default     = null
+}
+
 variable "instance_type" {
   description = "EC2 instance type for the bastion host."
   type        = string

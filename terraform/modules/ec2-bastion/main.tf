@@ -68,7 +68,7 @@ resource "aws_security_group" "bastion" {
 }
 
 resource "aws_instance" "this" {
-  ami                         = data.aws_ami.amazon_linux.id
+  ami                         = coalesce(var.ami_id, data.aws_ami.amazon_linux.id)
   instance_type               = var.instance_type
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = [aws_security_group.bastion.id]

@@ -68,6 +68,7 @@ inputs = {
     "AWS_REGION",
     "AWS_ROLE_ARN",
     "DATABASE_DRIVER",
+    "DB_POOL_MAX",
     "ELEVENLABS_DEFAULT_VOICE_ID",
     "ELEVENLABS_DIALECT_VOICE_MAP",
     "ELEVENLABS_STT_MODEL",
@@ -97,7 +98,9 @@ inputs = {
   container_port                    = 3000
   task_cpu                          = 512
   task_memory                       = 1024
-  desired_count                     = 1
+  desired_count                     = 4
+  autoscaling_min_capacity          = 4
+  autoscaling_max_capacity          = 8
   assign_public_ip                  = true
   health_check_grace_period_seconds = 60
   tags = {
