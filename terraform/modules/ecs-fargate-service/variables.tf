@@ -115,6 +115,24 @@ variable "desired_count" {
   default     = 1
 }
 
+variable "autoscaling_min_capacity" {
+  description = "Minimum number of ECS service tasks for application autoscaling. Defaults to desired_count when null."
+  type        = number
+  default     = null
+}
+
+variable "autoscaling_max_capacity" {
+  description = "Maximum number of ECS service tasks for application autoscaling. Set to null to disable service autoscaling."
+  type        = number
+  default     = null
+}
+
+variable "autoscaling_cpu_target_value" {
+  description = "Average ECS service CPU utilization percentage target for application autoscaling."
+  type        = number
+  default     = 70
+}
+
 variable "assign_public_ip" {
   description = "Whether ECS tasks should receive public IP addresses."
   type        = bool

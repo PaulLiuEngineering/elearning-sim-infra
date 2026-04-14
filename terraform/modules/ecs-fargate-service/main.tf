@@ -18,6 +18,7 @@ locals {
   service_name        = coalesce(var.service_name, "${var.name_prefix}-service")
   secret_region       = coalesce(var.ssm_parameter_region, data.aws_region.current.name)
   normalized_ssm_path = var.ssm_parameter_prefix == null ? null : "/${trim(var.ssm_parameter_prefix, "/")}"
+  autoscaling_enabled = var.create_service && var.autoscaling_max_capacity != null
 
   container_environment = [
     for name, value in var.container_environment : {
@@ -253,4 +254,32 @@ resource "aws_ecs_service" "this" {
   tags = merge(var.tags, {
     Name = local.service_name
   })
+}
+
+resource "aws_appautoscaling_target" "ecs_service" {
+  count = local.autoscaling_enabled ? 1 : 0
+
+  max_capacity       = var.autoscaling_max_capacity
+  min_capacity       = coalesce(var.autoscaling_min_capacity, var.desired_count)
+  resource_id        = "service/${aws_ecs_cluster.this.name}/${aws_ecs_service.this[0].name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "ecs_service_cpu" {
+  count = local.autoscaling_enabled ? 1 : 0
+
+  name               = "${local.service_name}-cpu-target"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.ecs_service[0].resource_id
+  scalable_dimension = aws_appautoscaling_target.ecs_service[0].scalable_dimension
+  service_namespace  = aws_appautoscaling_target.ecs_service[0].service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+
+    target_value = var.autoscaling_cpu_target_value
+  }
 }
