@@ -42,6 +42,12 @@ variable "sqs_managed_sse_enabled" {
   default     = true
 }
 
+variable "queue_url_ssm_parameter_name" {
+  description = "SSM parameter name that stores the SQS queue URL."
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "Tags applied to the SQS queues."
   type        = map(string)

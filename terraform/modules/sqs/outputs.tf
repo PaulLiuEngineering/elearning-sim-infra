@@ -18,6 +18,11 @@ output "queue_url" {
   value       = aws_sqs_queue.this.url
 }
 
+output "queue_url_parameter_name" {
+  description = "SSM parameter name storing the SQS queue URL."
+  value       = try(aws_ssm_parameter.queue_url[0].name, null)
+}
+
 output "dead_letter_queue_arn" {
   description = "ARN of the dead-letter queue."
   value       = aws_sqs_queue.dead_letter.arn

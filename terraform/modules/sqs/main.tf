@@ -27,3 +27,12 @@ resource "aws_sqs_queue" "this" {
 
   tags = var.tags
 }
+
+resource "aws_ssm_parameter" "queue_url" {
+  count = var.queue_url_ssm_parameter_name == null ? 0 : 1
+
+  name  = var.queue_url_ssm_parameter_name
+  type  = "String"
+  value = aws_sqs_queue.this.url
+  tags  = var.tags
+}
