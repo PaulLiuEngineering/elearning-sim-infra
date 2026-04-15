@@ -3,18 +3,21 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}//terraform/modules/ecs-fargate-service"
+  source = "${get_repo_root()}//terraform/modules/ecs-fargate-service-existing-cluster"
 }
 
 dependencies {
   paths = ["../sqs-llm-eval"]
 }
 
-dependency "alb" {
-  config_path = "../alb"
+dependency "ecs" {
+  config_path = "../ecs"
 
   mock_outputs = {
-    target_group_arn = "arn:aws:elasticloadbalancing:ap-east-1:000000000000:targetgroup/mock/0000000000000000"
+    cluster_arn        = "arn:aws:ecs:ap-east-1:000000000000:cluster/mock"
+    execution_role_arn = "arn:aws:iam::000000000000:role/mock-execution"
+    task_role_arn      = "arn:aws:iam::000000000000:role/mock-task"
+    security_group_id  = "sg-00000000000000001"
   }
   mock_outputs_merge_strategy_with_state  = "shallow"
   mock_outputs_allowed_terraform_commands = ["validate", "plan"]
@@ -24,8 +27,6 @@ dependency "vpc" {
   config_path = "../vpc"
 
   mock_outputs = {
-    vpc_id            = "vpc-00000000000000000"
-    vpc_cidr_block    = "10.0.0.0/16"
     public_subnet_ids = ["subnet-00000000000000001", "subnet-00000000000000002"]
   }
   mock_outputs_merge_strategy_with_state  = "shallow"
@@ -42,29 +43,15 @@ dependency "ecr" {
   mock_outputs_allowed_terraform_commands = ["validate", "plan"]
 }
 
-dependency "s3" {
-  config_path = "../s3"
-
-  mock_outputs = {
-    bucket_arn = "arn:aws:s3:::elearning-sim-hk-qa"
-  }
-  mock_outputs_merge_strategy_with_state  = "shallow"
-  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
-}
-
 inputs = {
-  aws_region            = "ap-east-1"
-  name_prefix           = "lumio-learning-qa-hk"
-  vpc_id                = dependency.vpc.outputs.vpc_id
-  subnet_ids            = dependency.vpc.outputs.public_subnet_ids
-  ingress_cidr_blocks   = [dependency.vpc.outputs.vpc_cidr_block]
-  target_group_arn      = dependency.alb.outputs.target_group_arn
-  container_image       = "${dependency.ecr.outputs.repository_url}:latest"
-  app_bucket_arn        = dependency.s3.outputs.bucket_arn
-  task_family           = "lumio-learning-qa-hk"
-  service_name          = "lumio-learning-qa-hk-service"
-  create_service        = true
-  container_name        = "app"
+  aws_region          = "ap-east-1"
+  cluster_arn         = dependency.ecs.outputs.cluster_arn
+  service_name        = "ecs-llm-eval-service"
+  task_family         = "lumio-learning-qa-hk-llm-eval"
+  container_name      = "app"
+  container_image     = "${dependency.ecr.outputs.repository_url}:latest"
+  container_command   = ["npm", "run", "worker:assessment-llm"]
+  container_port      = 3000
   container_environment = {}
   secret_parameter_names = [
     "ASSESSMENT_CONTENT_S3_BUCKET_ARN",
@@ -98,21 +85,21 @@ inputs = {
     "WORKOS_COOKIE_PASSWORD",
     "NANOGPT_API_KEY",
   ]
-  ssm_parameter_prefix              = "/lumio-learning/hk/qa"
-  ssm_parameter_region              = "ap-east-1"
-  container_port                    = 3000
-  task_cpu                          = 512
-  task_memory                       = 1024
-  desired_count                     = 2
-  autoscaling_min_capacity          = 2
-  autoscaling_max_capacity          = 4
-  assign_public_ip                  = true
-  health_check_grace_period_seconds = 60
+  ssm_parameter_prefix = "/lumio-learning/hk/qa"
+  ssm_parameter_region = "ap-east-1"
+  execution_role_arn   = dependency.ecs.outputs.execution_role_arn
+  task_role_arn        = dependency.ecs.outputs.task_role_arn
+  subnet_ids           = dependency.vpc.outputs.public_subnet_ids
+  security_group_ids   = [dependency.ecs.outputs.security_group_id]
+  task_cpu             = 512
+  task_memory          = 1024
+  desired_count        = 1
+  assign_public_ip     = true
   tags = {
     cloud       = "aws"
     environment = "qa"
     managed_by  = "terraform"
     region      = "ap-east-1"
-    stack       = "ecs"
+    stack       = "ecs-llm-eval-service"
   }
 }
