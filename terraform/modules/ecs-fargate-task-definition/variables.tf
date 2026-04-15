@@ -24,12 +24,6 @@ variable "container_command" {
   default     = []
 }
 
-variable "container_port" {
-  description = "Optional container port mapping to include in the ECS task definition."
-  type        = number
-  default     = null
-}
-
 variable "container_environment" {
   description = "Static environment variables injected into the task container."
   type        = map(string)

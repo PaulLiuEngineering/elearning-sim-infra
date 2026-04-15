@@ -34,13 +34,6 @@ locals {
         }
       }
     },
-    var.container_port == null ? {} : {
-      portMappings = [{
-        containerPort = var.container_port
-        hostPort      = var.container_port
-        protocol      = "tcp"
-      }]
-    },
     length(var.container_command) > 0 ? { command = var.container_command } : {},
     length(local.container_environment) > 0 ? { environment = local.container_environment } : {},
     length(local.container_secrets) > 0 ? { secrets = local.container_secrets } : {}

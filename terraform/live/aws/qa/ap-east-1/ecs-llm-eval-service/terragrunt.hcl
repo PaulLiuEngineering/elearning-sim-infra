@@ -51,7 +51,6 @@ inputs = {
   container_name        = "app"
   container_image       = "${dependency.ecr.outputs.repository_url}:latest"
   container_command     = ["npm", "run", "worker:assessment-llm"]
-  container_port        = 3000
   container_environment = {}
   secret_parameter_names = [
     "ASSESSMENT_CONTENT_S3_BUCKET_ARN",

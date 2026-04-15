@@ -6,7 +6,6 @@ module "task_definition" {
   container_name         = var.container_name
   container_image        = var.container_image
   container_command      = var.container_command
-  container_port         = var.container_port
   container_environment  = var.container_environment
   secret_parameter_names = var.secret_parameter_names
   ssm_parameter_prefix   = var.ssm_parameter_prefix
