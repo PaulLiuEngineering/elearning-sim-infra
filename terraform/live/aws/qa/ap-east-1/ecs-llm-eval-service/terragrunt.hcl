@@ -44,14 +44,14 @@ dependency "ecr" {
 }
 
 inputs = {
-  aws_region          = "ap-east-1"
-  cluster_arn         = dependency.ecs.outputs.cluster_arn
-  service_name        = "ecs-llm-eval-service"
-  task_family         = "lumio-learning-qa-hk-llm-eval"
-  container_name      = "app"
-  container_image     = "${dependency.ecr.outputs.repository_url}:latest"
-  container_command   = ["npm", "run", "worker:assessment-llm"]
-  container_port      = 3000
+  aws_region            = "ap-east-1"
+  cluster_arn           = dependency.ecs.outputs.cluster_arn
+  service_name          = "ecs-llm-eval-service"
+  task_family           = "lumio-learning-qa-hk-llm-eval"
+  container_name        = "app"
+  container_image       = "${dependency.ecr.outputs.repository_url}:latest"
+  container_command     = ["npm", "run", "worker:assessment-llm"]
+  container_port        = 3000
   container_environment = {}
   secret_parameter_names = [
     "ASSESSMENT_CONTENT_S3_BUCKET_ARN",
