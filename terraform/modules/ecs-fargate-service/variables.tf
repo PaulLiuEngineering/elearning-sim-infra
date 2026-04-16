@@ -45,6 +45,12 @@ variable "app_bucket_arn" {
   type        = string
 }
 
+variable "sqs_queue_arns" {
+  description = "SQS queue ARNs the ECS task role can send to or consume from."
+  type        = list(string)
+  default     = []
+}
+
 variable "task_family" {
   description = "Task definition family name. Defaults to name_prefix when null."
   type        = string
