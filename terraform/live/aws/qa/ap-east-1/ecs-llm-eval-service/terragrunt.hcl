@@ -50,7 +50,7 @@ inputs = {
   task_family           = "lumio-learning-qa-hk-llm-eval"
   container_name        = "app"
   container_image       = "${dependency.ecr.outputs.repository_url}:latest"
-  container_command     = ["npm", "run", "worker:assessment-llm"]
+  container_command     = ["node", "dist-workers/assessment-llm-worker.cjs"]
   container_environment = {}
   secret_parameter_names = [
     "ASSESSMENT_CONTENT_S3_BUCKET_ARN",
