@@ -229,7 +229,7 @@ jobs:
           manual_stack_dir = os.environ["MANUAL_STACK_DIR"]
 
           if event_name == "push":
-              groups = [group for group in groups if group["github_environment"] == "qa"]
+              groups = [group for group in groups if group["github_environment"] in ("dev", "qa")]
           elif event_name == "workflow_dispatch":
               if not run_apply:
                   groups = []

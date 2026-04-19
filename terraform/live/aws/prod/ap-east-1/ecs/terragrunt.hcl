@@ -6,6 +6,10 @@ terraform {
   source = "${get_repo_root()}//terraform/modules/ecs-fargate-service"
 }
 
+dependencies {
+  paths = ["../sqs-llm-eval"]
+}
+
 dependency "alb" {
   config_path = "../alb"
 
@@ -48,6 +52,16 @@ dependency "s3" {
   mock_outputs_allowed_terraform_commands = ["validate", "plan"]
 }
 
+dependency "sqs_llm_eval" {
+  config_path = "../sqs-llm-eval"
+
+  mock_outputs = {
+    queue_arn = "arn:aws:sqs:ap-east-1:000000000000:assessment-llm-evaluation-prod"
+  }
+  mock_outputs_merge_strategy_with_state  = "shallow"
+  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+}
+
 inputs = {
   aws_region            = "ap-east-1"
   name_prefix           = "lumio-learning-hk-prod"
@@ -57,6 +71,7 @@ inputs = {
   target_group_arn      = dependency.alb.outputs.target_group_arn
   container_image       = "${dependency.ecr.outputs.repository_url}:latest"
   app_bucket_arn        = dependency.s3.outputs.bucket_arn
+  sqs_queue_arns        = [dependency.sqs_llm_eval.outputs.queue_arn]
   task_family           = "lumio-learning-hk-prod"
   service_name          = "lumio-learning-hk-prod-service"
   create_service        = true
@@ -64,6 +79,7 @@ inputs = {
   container_environment = {}
   secret_parameter_names = [
     "ASSESSMENT_CONTENT_S3_BUCKET_ARN",
+    "ASSESSMENT_LLM_EVALUATION_SQS_QUEUE_URL",
     "ASSESSMENT_EXPLAIN_ENABLED",
     "AWS_REGION",
     "AWS_ROLE_ARN",

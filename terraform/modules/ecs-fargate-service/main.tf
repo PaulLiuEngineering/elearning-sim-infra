@@ -83,6 +83,34 @@ data "aws_iam_policy_document" "task_s3_access" {
   }
 }
 
+data "aws_iam_policy_document" "task_sqs_access" {
+  count = length(var.sqs_queue_arns) == 0 ? 0 : 1
+
+  statement {
+    sid = "AllowQueueMessaging"
+
+    actions = [
+      "sqs:ChangeMessageVisibility",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes",
+      "sqs:ReceiveMessage",
+      "sqs:SendMessage"
+    ]
+
+    resources = var.sqs_queue_arns
+  }
+
+  statement {
+    sid = "AllowQueueLookup"
+
+    actions = [
+      "sqs:GetQueueUrl"
+    ]
+
+    resources = ["*"]
+  }
+}
+
 resource "aws_security_group" "ecs_service" {
   name        = "${var.name_prefix}-ecs"
   description = "Security group for the ${var.name_prefix} ECS service"
@@ -176,6 +204,14 @@ resource "aws_iam_role_policy" "task_s3_access" {
   name   = "${var.name_prefix}-task-s3-access"
   role   = aws_iam_role.task.id
   policy = data.aws_iam_policy_document.task_s3_access.json
+}
+
+resource "aws_iam_role_policy" "task_sqs_access" {
+  count = length(var.sqs_queue_arns) == 0 ? 0 : 1
+
+  name   = "${var.name_prefix}-task-sqs-access"
+  role   = aws_iam_role.task.id
+  policy = data.aws_iam_policy_document.task_sqs_access[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "execution_ecs_task" {

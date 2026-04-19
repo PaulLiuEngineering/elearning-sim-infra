@@ -1,0 +1,104 @@
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
+terraform {
+  source = "${get_repo_root()}//terraform/modules/ecs-fargate-service-existing-cluster"
+}
+
+dependencies {
+  paths = ["../sqs-llm-eval"]
+}
+
+dependency "ecs" {
+  config_path = "../ecs"
+
+  mock_outputs = {
+    cluster_arn        = "arn:aws:ecs:ap-east-1:000000000000:cluster/mock"
+    execution_role_arn = "arn:aws:iam::000000000000:role/mock-execution"
+    task_role_arn      = "arn:aws:iam::000000000000:role/mock-task"
+    security_group_id  = "sg-00000000000000001"
+  }
+  mock_outputs_merge_strategy_with_state  = "shallow"
+  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+}
+
+dependency "vpc" {
+  config_path = "../vpc"
+
+  mock_outputs = {
+    public_subnet_ids = ["subnet-00000000000000001", "subnet-00000000000000002"]
+  }
+  mock_outputs_merge_strategy_with_state  = "shallow"
+  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+}
+
+dependency "ecr" {
+  config_path = "../ecr"
+
+  mock_outputs = {
+    repository_url = "000000000000.dkr.ecr.ap-east-1.amazonaws.com/mock"
+  }
+  mock_outputs_merge_strategy_with_state  = "shallow"
+  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+}
+
+inputs = {
+  aws_region            = "ap-east-1"
+  cluster_arn           = dependency.ecs.outputs.cluster_arn
+  service_name          = "ecs-llm-eval-service"
+  task_family           = "lumio-learning-qa-hk-llm-eval"
+  container_name        = "app"
+  container_image       = "${dependency.ecr.outputs.repository_url}:latest"
+  container_command     = ["node", "dist-workers/assessment-llm-worker.cjs"]
+  container_environment = {}
+  secret_parameter_names = [
+    "ASSESSMENT_CONTENT_S3_BUCKET_ARN",
+    "ASSESSMENT_LLM_EVALUATION_SQS_QUEUE_URL",
+    "ASSESSMENT_EXPLAIN_ENABLED",
+    "AWS_REGION",
+    "AWS_ROLE_ARN",
+    "DATABASE_DRIVER",
+    "DB_POOL_MAX",
+    "ELEVENLABS_DEFAULT_VOICE_ID",
+    "ELEVENLABS_DIALECT_VOICE_MAP",
+    "ELEVENLABS_STT_MODEL",
+    "ELEVENLABS_TTS_MODEL",
+    "ELEVENLABS_TTS_OUTPUT_FORMAT",
+    "LLM_PROVIDER",
+    "LOG_LEVEL",
+    "NANOGPT_IMAGE_MODEL",
+    "NANOGPT_IMAGE_TIMEOUT_MS",
+    "NANOGPT_MODEL",
+    "NANOGPT_TIMEOUT_MS",
+    "NEXT_PUBLIC_ASSESSMENT_EXPLAIN_ENABLED",
+    "NEXT_PUBLIC_ASSESSMENT_REUSE_CURRENT_QUESTION",
+    "NEXT_PUBLIC_WORKOS_REDIRECT_URI",
+    "APP_BASE_URL",
+    "WORKOS_DEFAULT_ORGANIZATION_ID",
+    "WORKOS_REDIRECT_URI",
+    "DATABASE_URL",
+    "ELEVENLABS_API_KEY",
+    "WORKOS_API_KEY",
+    "WORKOS_CLIENT_ID",
+    "WORKOS_COOKIE_PASSWORD",
+    "NANOGPT_API_KEY",
+  ]
+  ssm_parameter_prefix = "/lumio-learning/hk/qa"
+  ssm_parameter_region = "ap-east-1"
+  execution_role_arn   = dependency.ecs.outputs.execution_role_arn
+  task_role_arn        = dependency.ecs.outputs.task_role_arn
+  subnet_ids           = dependency.vpc.outputs.public_subnet_ids
+  security_group_ids   = [dependency.ecs.outputs.security_group_id]
+  task_cpu             = 512
+  task_memory          = 1024
+  desired_count        = 1
+  assign_public_ip     = true
+  tags = {
+    cloud       = "aws"
+    environment = "qa"
+    managed_by  = "terraform"
+    region      = "ap-east-1"
+    stack       = "ecs-llm-eval-service"
+  }
+}
