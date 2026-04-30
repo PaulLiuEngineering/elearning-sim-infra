@@ -26,7 +26,6 @@ inputs = {
   ami_id      = "ami-08944d7bb6589fc80"
   allowed_cidr_block_ssm_parameter_names = [
     "/lumio-learning/hk/qa/alb-allowlist/paulliu",
-    "/lumio-learning/hk/qa/alb-allowlist/tigercai",
   ]
   tags = {
     cloud       = "aws"
