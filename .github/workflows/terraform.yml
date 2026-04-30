@@ -33,6 +33,8 @@ env:
   TF_IN_AUTOMATION: true
   TG_VERSION: "1.0.0"
   TG_LOG_LEVEL: error
+  TG_LOG_DISABLE: "true"
+  TG_NO_COLOR: "true"
 
 concurrency:
   group: terraform-${{ github.ref }}
