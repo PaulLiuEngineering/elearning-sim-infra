@@ -6,19 +6,19 @@ variable "vpc_id" {
 variable "alb_name" {
   description = "Name of the ALB and its security group."
   type        = string
-  default     = "lumio-learning-prod-alb"
+  default     = "nexa-learning-prod-alb"
 }
 
 variable "target_group_name" {
   description = "Name of the placeholder target group."
   type        = string
-  default     = "lumio-learning-prod-tg"
+  default     = "nexa-learning-prod-tg"
 }
 
 variable "target_group_tag_name" {
   description = "Name tag applied to the placeholder target group."
   type        = string
-  default     = "lumio-learning-prod-placeholder-tg"
+  default     = "nexa-learning-prod-placeholder-tg"
 }
 
 variable "security_group_description" {
@@ -46,7 +46,7 @@ variable "placeholder_target_group_port" {
 variable "fixed_response_message_body" {
   description = "Fixed HTTPS response served until an ECS target is attached."
   type        = string
-  default     = "Lumio Learning is coming soon."
+  default     = "nexa Learning is coming soon."
 }
 
 variable "certificate_arn" {

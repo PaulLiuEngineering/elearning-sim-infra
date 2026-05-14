@@ -37,7 +37,7 @@ variable "placeholder_target_group_port" {
 variable "fixed_response_message_body" {
   description = "Fixed HTTPS response served until an ECS target is attached."
   type        = string
-  default     = "Lumio Learning QA is coming soon."
+  default     = "nexa Learning QA is coming soon."
 }
 
 variable "certificate_arn" {
