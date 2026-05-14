@@ -29,13 +29,13 @@ dependency "vpc" {
 
 inputs = {
   aws_region     = "ap-east-1"
-  name_prefix    = "lumio-learning-qa-hk"
-  domain_name    = "qa-internal.lumio-learning.com"
+  name_prefix    = "nexa-learning-qa-hk"
+  domain_name    = "qa-internal.nexa-learning.com"
   hosted_zone_id = dependency.dns_zone.outputs.hosted_zone_id
   vpc_id         = dependency.vpc.outputs.vpc_id
   subnet_ids     = dependency.vpc.outputs.public_subnet_ids
   allowed_cidr_block_ssm_parameter_names = [
-    "/lumio-learning/hk/qa/alb-allowlist/paulliu",
+    "/nexa-learning/hk/qa/alb-allowlist/paulliu",
   ]
   tags = {
     cloud       = "aws"

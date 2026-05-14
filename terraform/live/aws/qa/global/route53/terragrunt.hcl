@@ -10,7 +10,7 @@ dependency "alb" {
   config_path = "../../ap-east-1/alb"
 
   mock_outputs = {
-    alb_dns_name   = "qa-internal-lumio-learning-alb-000000.ap-east-1.elb.amazonaws.com"
+    alb_dns_name   = "qa-internal-nexa-learning-alb-000000.ap-east-1.elb.amazonaws.com"
     alb_zone_id    = "Z0000000000000"
     hosted_zone_id = "Z0000000000000000"
   }
@@ -20,8 +20,8 @@ dependency "alb" {
 
 inputs = {
   aws_region      = "us-east-1"
-  domain_name     = "qa-internal.lumio-learning.com"
-  www_domain_name = "www.qa-internal.lumio-learning.com"
+  domain_name     = "qa-internal.nexa-learning.com"
+  www_domain_name = "www.qa-internal.nexa-learning.com"
   hosted_zone_id  = dependency.alb.outputs.hosted_zone_id
   alias_name      = dependency.alb.outputs.alb_dns_name
   alias_zone_id   = dependency.alb.outputs.alb_zone_id
