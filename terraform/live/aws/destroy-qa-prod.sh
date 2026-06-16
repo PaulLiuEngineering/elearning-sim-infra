@@ -296,8 +296,8 @@ require_cmd bash
 
 confirm
 
-run_step "disable-rds-qa" disable_rds_deletion_protection "lumio-learning-qa-hk-postgres"
-run_step "disable-rds-prod" disable_rds_deletion_protection "lumio-learning-hk-prod-postgres"
+run_step "disable-rds-qa" disable_rds_deletion_protection "nexa-learning-qa-hk-postgres"
+run_step "disable-rds-prod" disable_rds_deletion_protection "nexa-learning-hk-prod-postgres"
 
 run_step "destroy-prod-global-route53-records" destroy_stack "$ROOT_DIR/prod/global/route53-records"
 run_step "destroy-prod-global-route53-qa-internal-delegation" destroy_stack "$ROOT_DIR/prod/global/route53-qa-internal-delegation"
