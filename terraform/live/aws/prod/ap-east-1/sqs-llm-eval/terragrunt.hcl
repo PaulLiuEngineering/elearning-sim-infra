@@ -12,7 +12,7 @@ inputs = {
   visibility_timeout_seconds   = 30
   message_retention_seconds    = 345600
   receive_wait_time_seconds    = 0
-  queue_url_ssm_parameter_name = "/lumio-learning/hk/prod/ASSESSMENT_LLM_EVALUATION_SQS_QUEUE_URL"
+  queue_url_ssm_parameter_name = "/nexa-learning/hk/prod/ASSESSMENT_LLM_EVALUATION_SQS_QUEUE_URL"
   redrive_policy = {
     max_receive_count = 5
   }

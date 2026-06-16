@@ -8,7 +8,7 @@ terraform {
 
 inputs = {
   aws_region                 = "ap-east-1"
-  name_prefix                = "lumio-learning-hk-prod"
+  name_prefix                = "nexa-learning-hk-prod"
   cidr_block                 = "172.33.0.0/16"
   public_availability_zones  = ["ap-east-1a", "ap-east-1b", "ap-east-1c"]
   public_subnet_cidrs        = ["172.33.0.0/20", "172.33.16.0/20", "172.33.32.0/20"]

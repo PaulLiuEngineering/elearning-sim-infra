@@ -47,7 +47,7 @@ inputs = {
   aws_region            = "ap-east-1"
   cluster_arn           = dependency.ecs.outputs.cluster_arn
   service_name          = "ecs-llm-eval-service"
-  task_family           = "lumio-learning-qa-hk-llm-eval"
+  task_family           = "nexa-learning-qa-hk-llm-eval"
   container_name        = "app"
   container_image       = "${dependency.ecr.outputs.repository_url}:latest"
   container_command     = ["node", "dist-workers/assessment-llm-worker.cjs"]
@@ -84,7 +84,7 @@ inputs = {
     "WORKOS_COOKIE_PASSWORD",
     "NANOGPT_API_KEY",
   ]
-  ssm_parameter_prefix = "/lumio-learning/hk/qa"
+  ssm_parameter_prefix = "/nexa-learning/hk/qa"
   ssm_parameter_region = "ap-east-1"
   execution_role_arn   = dependency.ecs.outputs.execution_role_arn
   task_role_arn        = dependency.ecs.outputs.task_role_arn

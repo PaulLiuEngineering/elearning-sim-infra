@@ -64,7 +64,7 @@ dependency "sqs_llm_eval" {
 
 inputs = {
   aws_region            = "ap-east-1"
-  name_prefix           = "lumio-learning-hk-prod"
+  name_prefix           = "nexa-learning-hk-prod"
   vpc_id                = dependency.vpc.outputs.vpc_id
   subnet_ids            = dependency.vpc.outputs.public_subnet_ids
   ingress_cidr_blocks   = [dependency.vpc.outputs.vpc_cidr_block]
@@ -72,8 +72,8 @@ inputs = {
   container_image       = "${dependency.ecr.outputs.repository_url}:latest"
   app_bucket_arn        = dependency.s3.outputs.bucket_arn
   sqs_queue_arns        = [dependency.sqs_llm_eval.outputs.queue_arn]
-  task_family           = "lumio-learning-hk-prod"
-  service_name          = "lumio-learning-hk-prod-service"
+  task_family           = "nexa-learning-hk-prod"
+  service_name          = "nexa-learning-hk-prod-service"
   create_service        = true
   container_name        = "app"
   container_environment = {}
@@ -109,7 +109,7 @@ inputs = {
     "WORKOS_COOKIE_PASSWORD",
     "NANOGPT_API_KEY",
   ]
-  ssm_parameter_prefix              = "/lumio-learning/hk/prod"
+  ssm_parameter_prefix              = "/nexa-learning/hk/prod"
   ssm_parameter_region              = "ap-east-1"
   container_port                    = 3000
   task_cpu                          = 256

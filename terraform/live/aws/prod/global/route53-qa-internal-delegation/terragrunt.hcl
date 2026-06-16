@@ -34,7 +34,7 @@ dependency "qa_zone" {
 inputs = {
   aws_region            = "us-east-1"
   parent_hosted_zone_id = dependency.parent_zone.outputs.hosted_zone_id
-  subdomain_name        = "qa-internal.lumio-learning.com"
+  subdomain_name        = "qa-internal.nexa-learning.com"
   name_servers          = dependency.qa_zone.outputs.hosted_zone_name_servers
   tags = {
     cloud       = "aws"

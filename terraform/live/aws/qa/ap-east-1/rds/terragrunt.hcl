@@ -38,7 +38,7 @@ dependency "bastion" {
 
 inputs = {
   aws_region                     = "ap-east-1"
-  name_prefix                    = "lumio-learning-qa-hk"
+  name_prefix                    = "nexa-learning-qa-hk"
   vpc_id                         = dependency.vpc.outputs.vpc_id
   subnet_ids                     = dependency.vpc.outputs.private_subnet_ids
   allowed_security_group_id      = dependency.ecs.outputs.security_group_id
@@ -50,9 +50,9 @@ inputs = {
   backup_retention_period        = 7
   backup_window                  = "18:00-19:00"
   deletion_protection            = true
-  db_address_ssm_parameter_name  = "/lumio-learning/hk/qa/DB_ADDRESS"
-  db_username_ssm_parameter_name = "/lumio-learning/hk/qa/DB_USERNAME"
-  db_password_ssm_parameter_name = "/lumio-learning/hk/qa/DB_PASSWORD"
+  db_address_ssm_parameter_name  = "/nexa-learning/hk/qa/DB_ADDRESS"
+  db_username_ssm_parameter_name = "/nexa-learning/hk/qa/DB_USERNAME"
+  db_password_ssm_parameter_name = "/nexa-learning/hk/qa/DB_PASSWORD"
   tags = {
     cloud       = "aws"
     environment = "qa"

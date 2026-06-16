@@ -29,7 +29,7 @@ dependency "ecr" {
 
 inputs = {
   aws_region            = "ap-east-1"
-  task_family           = "lumio-learning-hk-prod-migrate"
+  task_family           = "nexa-learning-hk-prod-migrate"
   container_name        = "migrate"
   container_image       = "${dependency.ecr.outputs.repository_url}:migrate-latest"
   container_command     = ["npm", "run", "db:migrate"]
@@ -37,7 +37,7 @@ inputs = {
   secret_parameter_names = [
     "DATABASE_URL",
   ]
-  ssm_parameter_prefix = "/lumio-learning/hk/prod"
+  ssm_parameter_prefix = "/nexa-learning/hk/prod"
   ssm_parameter_region = "ap-east-1"
   execution_role_arn   = dependency.ecs.outputs.execution_role_arn
   task_role_arn        = dependency.ecs.outputs.task_role_arn

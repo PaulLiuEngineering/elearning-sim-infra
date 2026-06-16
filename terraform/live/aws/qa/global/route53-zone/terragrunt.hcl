@@ -8,7 +8,7 @@ terraform {
 
 inputs = {
   aws_region  = "us-east-1"
-  domain_name = "qa-internal.lumio-learning.com"
+  domain_name = "qa-internal.nexa-learning.com"
   tags = {
     cloud       = "aws"
     environment = "qa"
